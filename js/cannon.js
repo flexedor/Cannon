@@ -21,8 +21,8 @@ export const cannon = (() => {
                 this.gameObject.scene.traverse( c=>{
                     c.castShadow=true;
                 })
-                this.gameObject.x=250;
-                this.gameObject.scene.scale.set(50,50,50);
+                this.gameObject.x=50;
+                //this.gameObject.scene.scale.set(50,50,50);
                 this.animationMixer=new THREE.AnimationMixer(this.gameObject.scene);
                 this.idle=this.animationMixer.clipAction(this.gameObject.animations[0])
                 this.idle.setLoop( THREE.LoopOnce );

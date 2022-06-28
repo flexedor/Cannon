@@ -1,10 +1,10 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.124/build/three.module.js';
 import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
 
-// import {player} from './player.js';
 import {cannon} from './cannon.js';
- import {skybox} from './backgroundSkybox.js';
+import {skybox} from './backgroundSkybox.js';
 import {block} from './block.js';
+import {waterPlane} from './waterSimulation.js';
 import {ground} from './ground.js';
 
 
@@ -50,14 +50,14 @@ class BasicWorldDemo {
     const near = 1.0;
     const far = 20000.0;
     this.camera_ = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    this.camera_.position.set(1000, 100, 100);
+    this.camera_.position.set(100, 100, 100);
     this.camera_.lookAt(0, 0, 0);
 
     this.scene_ = new THREE.Scene();
 
 
     const color = 0xFFFFFF;
-    const intensity = 0.6;
+    const intensity = 10;
     const light = new THREE.AmbientLight(color, intensity);
     light.position.x = 12000
     light.position.y = 30000
@@ -74,7 +74,7 @@ class BasicWorldDemo {
     this._controls.update();
 
 
-
+    this.water=new waterPlane.WaterPlane({scene: this.scene_});
     this.ground = new ground.Ground({scene: this.scene_});
    // this.block = new block.Block({scene: this.scene_});
     this.scene_.background=new skybox.Skybox({scene: this.scene_}).GetTexture();
@@ -133,7 +133,7 @@ class BasicWorldDemo {
     this.gameObjects.forEach((gameObj)=>gameObj.update());
     this.ground.Update(timeElapsed);
     this._controls.update();
-
+    this.water.Update(timeElapsed);
     // if (this.player_.gameOver && !this.gameOver_) {
     //   this.gameOver_ = true;
     //   document.getElementById('game-over').classList.toggle('active');
