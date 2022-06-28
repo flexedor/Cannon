@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="6e5e7ee5-284e-4bf6-8ab8-961dc86bd721" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="package.json" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="2B4oY9dmPC7Q1fynxx5AGNxe5Aj" />
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="autoscrollToSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../test" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Projects\ThreeJs\Armata" />
+      <recent name="D:\Projects\ThreeJs\Armata\js" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="6e5e7ee5-284e-4bf6-8ab8-961dc86bd721" name="Default Changelist" comment="" />
+      <created>1656174762993</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1656174762993</updated>
+      <workItem from="1656174764074" duration="1169000" />
+      <workItem from="1656176321268" duration="48266000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="395" y="87" key="#Inspections" timestamp="1656346604807">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="395" y="87" key="#Inspections/0.0.1536.816/0.-1080.1920.1032@0.0.1536.816" timestamp="1656346604807" />
+    <state x="223" y="63" width="1089" height="713" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1656267357574">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="223" y="63" width="1089" height="713" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.816/0.-1080.1920.1032@0.0.1536.816" timestamp="1656267357574" />
+    <state x="549" y="163" key="FileChooserDialogImpl" timestamp="1656441456199">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="549" y="163" key="FileChooserDialogImpl/0.0.1536.816/0.-1080.1920.1032@0.0.1536.816" timestamp="1656441456199" />
+    <state x="425" y="185" key="run.anything.popup" timestamp="1656262190600">
+      <screen x="0" y="0" width="1536" height="816" />
+    </state>
+    <state x="425" y="185" key="run.anything.popup/0.0.1536.816/0.-1080.1920.1032@0.0.1536.816" timestamp="1656262190600" />
+  </component>
+</project>
