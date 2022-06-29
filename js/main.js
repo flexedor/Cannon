@@ -1,12 +1,13 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.124/build/three.module.js';
 import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.118/examples/jsm/controls/OrbitControls.js';
+import Stats from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/libs/stats.module.js';
 
 import {cannon} from './cannon.js';
 import {skybox} from './backgroundSkybox.js';
 import {block} from './block.js';
 import {waterPlane} from './waterSimulation.js';
 import {ground} from './ground.js';
-
+import {rigidBody}from'./rigidBody.js';
 
 
 
@@ -31,20 +32,52 @@ class BasicWorldDemo {
     });
     this.mixers=[];
     this.gameObjects=[];
+    document.getElementById('container').appendChild(this.threejs_.domElement);
+    this.scene_ = new THREE.Scene();
+    this.initCamera();
+    this.initPhysics();
+    this.initControls();
+    this.initLight();
+    this.initGameObjects();
+
+    document.addEventListener('keydown', (e) =>this.OnKeyDown(e), false)
+    this.gameOver_ = false;
+    this.previousRAF_ = null;
+    this.tmpTransform_ = new Ammo.btTransform();
+    this.RAF_();
+    this.OnWindowResize_();
+  }
+  initGameObjects(){
+    this.water=new waterPlane.WaterPlane({scene: this.scene_,physicsWorld:this.physicsWorld_});
+    this.ground = new ground.Ground({scene: this.scene_});
+    // this.block = new block.Block({scene: this.scene_});
+    this.scene_.background=new skybox.Skybox({scene: this.scene_}).GetTexture();
+    this.gameObjects.push(new cannon.Cannon({scene: this.scene_}));
+  }
+  initLight(){
+    const color = 0xFFFFFF;
+    const intensity = 100;
+    const light = new THREE.AmbientLight(color, intensity);
+    light.position.x = 12000
+    light.position.y = 30000
+
+    //console.log(light.position)
+    this.scene_.add(light);
+  }
+  initCamera(){
+
     this.threejs_.outputEncoding = THREE.sRGBEncoding;
     this.threejs_.gammaFactor = 2.2;
-    
+
     this.threejs_.shadowMap.enabled = true;
 
     this.threejs_.setPixelRatio(window.devicePixelRatio);
     this.threejs_.setSize(window.innerWidth, window.innerHeight);
 
-    document.getElementById('container').appendChild(this.threejs_.domElement);
-
     window.addEventListener('resize', () => {
       this.OnWindowResize_();
     }, false);
-   // document.addEventListener('keydown', (e) =>console.log(e.key), false);
+
     const fov = 60;
     const aspect = 1920 / 1080;
     const near = 1.0;
@@ -52,43 +85,43 @@ class BasicWorldDemo {
     this.camera_ = new THREE.PerspectiveCamera(fov, aspect, near, far);
     this.camera_.position.set(100, 100, 100);
     this.camera_.lookAt(0, 0, 0);
+  }
+  initPhysics() {
 
-    this.scene_ = new THREE.Scene();
+    // Physics configuration
+    this.rigidBodies_ = [];
+    this.collisionConfiguration_ = new Ammo.btDefaultCollisionConfiguration();
+    this.dispatcher_ = new Ammo.btCollisionDispatcher(this.collisionConfiguration_);
+    this.broadphase_ = new Ammo.btDbvtBroadphase();
+    this.solver_ = new Ammo.btSequentialImpulseConstraintSolver();
+    this.physicsWorld_ = new Ammo.btDiscreteDynamicsWorld(
+        this.dispatcher_, this.broadphase_, this.solver_, this.collisionConfiguration_);
+    this.physicsWorld_.setGravity(new Ammo.btVector3(0, -100, 0));
 
-
-    const color = 0xFFFFFF;
-    const intensity = 10;
-    const light = new THREE.AmbientLight(color, intensity);
-    light.position.x = 12000
-    light.position.y = 30000
-
-    //console.log(light.position)
-    this.scene_.add(light);
-
-
+  }
+  initControls(){
     this._controls = new OrbitControls(
-    this.camera_, document.getElementById('container'));
+        this.camera_, document.getElementById('container'));
     this._controls.target.set(0, 10, 0);
     this._controls.enablePan=false;
     this._controls.maxDistance=5000;
     this._controls.update();
-
-
-    this.water=new waterPlane.WaterPlane({scene: this.scene_});
-    this.ground = new ground.Ground({scene: this.scene_});
-   // this.block = new block.Block({scene: this.scene_});
-    this.scene_.background=new skybox.Skybox({scene: this.scene_}).GetTexture();
-    this.gameObjects.push(new cannon.Cannon({scene: this.scene_}));
-
-    document.addEventListener('keydown', (e) =>this.OnKeyDown(e), false)
-    this.gameOver_ = false;
-    this.previousRAF_ = null;
-    this.RAF_();
-    this.OnWindowResize_();
   }
   OnKeyDown(event){
     switch (event.code) {
       case "Space":
+        const rbBox = new rigidBody.RigidBody();
+        const box = new THREE.Mesh(
+            new THREE.SphereGeometry(4),
+            new THREE.MeshStandardMaterial({color: 0x808080}));
+        box.position.set(0, 1000, 0);
+        rbBox.createSphere(1, box.position, 4);
+        rbBox.setRestitution(0.5);
+        rbBox.setFriction(1);
+        rbBox.setRollingFriction(1);
+        this.physicsWorld_.addRigidBody(rbBox.body_);
+        this.scene_.add(box);
+        this.rigidBodies_.push({mesh: box, rigidBody: rbBox});
         this.gameObjects.forEach((s)=>{
           s.Shoot()
           console.log("shoot")
@@ -134,6 +167,21 @@ class BasicWorldDemo {
     this.ground.Update(timeElapsed);
     this._controls.update();
     this.water.Update(timeElapsed);
+    const timeElapsedS = timeElapsed * 0.001;
+    this.physicsWorld_.stepSimulation(timeElapsed, 10);
+
+    for (let i = 0; i < this.rigidBodies_.length; ++i) {
+      this.rigidBodies_[i].rigidBody.motionState_.getWorldTransform(this.tmpTransform_);
+      const pos = this.tmpTransform_.getOrigin();
+      const quat = this.tmpTransform_.getRotation();
+      const pos3 = new THREE.Vector3(pos.x(), pos.y(), pos.z());
+      //console.log(pos3);
+      const quat3 = new THREE.Quaternion(quat.x(), quat.y(), quat.z(), quat.w());
+
+      this.rigidBodies_[i].mesh.position.copy(pos3);
+      console.log(this.rigidBodies_[i].mesh.position);
+      this.rigidBodies_[i].mesh.quaternion.copy(quat3);
+    }
     // if (this.player_.gameOver && !this.gameOver_) {
     //   this.gameOver_ = true;
     //   document.getElementById('game-over').classList.toggle('active');
@@ -144,8 +192,12 @@ class BasicWorldDemo {
 
 let _APP = null;
 
-window.addEventListener('DOMContentLoaded', () => {
-  _APP = new BasicWorldDemo();
+window.addEventListener('DOMContentLoaded', async () => {
+  Ammo().then((lib=>{
+      Ammo=lib;
+    _APP = new BasicWorldDemo();
+  }))
+
 });
 
 
