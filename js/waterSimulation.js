@@ -1,5 +1,6 @@
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.124/build/three.module.js';
 import { Water } from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/objects/Water.js';
+import {rigidBody} from "./rigidBody.js";
 export const waterPlane = (() => {
 
     class WaterPlane {
@@ -10,8 +11,11 @@ export const waterPlane = (() => {
 
 
         load = () => {
-            const waterGeometry = new THREE.PlaneGeometry(10000, 10000);
-            this.texture1 = new Water(
+            let scale = {x: 10000, y: 10000, z: 5};
+            const waterGeometry = new THREE.BoxGeometry(scale.x, scale.y,scale.z);
+            waterGeometry.castShadow = false;
+            waterGeometry.receiveShadow = true;
+            this.mesh_ = new Water(
                 waterGeometry,
                 {
                     textureWidth: 512,
@@ -24,14 +28,18 @@ export const waterPlane = (() => {
                    // fog: scene.fog !== undefined
                 }
             );
-            this.texture1.rotation.x =- Math.PI / 2;
-            this.texture1.position.y= -50;
-            this.params_.scene.add(this.texture1)
+            this.mesh_.rotation.x =- Math.PI / 2;
+            this.mesh_.position.y= -50;
+            const rbGround = new rigidBody.RigidBody();
+            rbGround.createBox(0, this.mesh_.position, this.mesh_.quaternion, new THREE.Vector3(scale.x, scale.y,scale.z));
+            rbGround.setRestitution(0.99);
+            this.params_.physicsWorld.addRigidBody(rbGround.body_);
+            this.params_.scene.add(this.mesh_)
         };
 
 
         Update(timeElapsed){
-            this.texture1.material.uniforms[ 'time' ].value += 1.0 / 60.0;
+            this.mesh_.material.uniforms[ 'time' ].value += 1.0 / 60.0;
 
         }
 

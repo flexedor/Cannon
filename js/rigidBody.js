@@ -16,6 +16,13 @@ export const rigidBody = (() => {
     setRollingFriction(val) {
         this.body_.setRollingFriction(val);
     }
+    setLineralVelocity(vector){
+        console.log(vector);
+        const tempVec=new Ammo.btVector3(parseInt(vector.x,10),parseInt(vector.y,10),parseInt(vector.z,10 ));
+
+        //this.body_.setLinearVelocity( tempVec );
+        this.body_.applyImpulse(tempVec);
+    }
     createBox(mass, pos, quat, size) {
         this.transform_ = new Ammo.btTransform();
         this.transform_.setIdentity();

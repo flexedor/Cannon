@@ -7,7 +7,6 @@ import {skybox} from './backgroundSkybox.js';
 import {block} from './block.js';
 import {waterPlane} from './waterSimulation.js';
 import {ground} from './ground.js';
-import {rigidBody}from'./rigidBody.js';
 
 
 
@@ -52,11 +51,11 @@ class BasicWorldDemo {
     this.ground = new ground.Ground({scene: this.scene_});
     // this.block = new block.Block({scene: this.scene_});
     this.scene_.background=new skybox.Skybox({scene: this.scene_}).GetTexture();
-    this.gameObjects.push(new cannon.Cannon({scene: this.scene_}));
+    this.gameObjects.push(new cannon.Cannon({scene: this.scene_,camera:this.camera_}));
   }
   initLight(){
     const color = 0xFFFFFF;
-    const intensity = 100;
+    const intensity = 1;
     const light = new THREE.AmbientLight(color, intensity);
     light.position.x = 12000
     light.position.y = 30000
@@ -83,7 +82,7 @@ class BasicWorldDemo {
     const near = 1.0;
     const far = 20000.0;
     this.camera_ = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    this.camera_.position.set(100, 100, 100);
+    this.camera_.position.set(120, 50,120);
     this.camera_.lookAt(0, 0, 0);
   }
   initPhysics() {
@@ -102,28 +101,24 @@ class BasicWorldDemo {
   initControls(){
     this._controls = new OrbitControls(
         this.camera_, document.getElementById('container'));
-    this._controls.target.set(0, 10, 0);
+    this._controls.target.set(0, 0, 0);
+
+    this._controls.minPolarAngle = (90 - 30) * Math.PI / 180;
+    this._controls.maxPolarAngle = (90-2) * Math.PI / 180;
+    this._controls.minAzimuthAngle = 0
+    this._controls.maxAzimuthAngle = Math.PI / 3
+
+    this._controls.enableZoom=false;
     this._controls.enablePan=false;
     this._controls.maxDistance=5000;
+
     this._controls.update();
   }
   OnKeyDown(event){
     switch (event.code) {
       case "Space":
-        const rbBox = new rigidBody.RigidBody();
-        const box = new THREE.Mesh(
-            new THREE.SphereGeometry(4),
-            new THREE.MeshStandardMaterial({color: 0x808080}));
-        box.position.set(0, 1000, 0);
-        rbBox.createSphere(1, box.position, 4);
-        rbBox.setRestitution(0.5);
-        rbBox.setFriction(1);
-        rbBox.setRollingFriction(1);
-        this.physicsWorld_.addRigidBody(rbBox.body_);
-        this.scene_.add(box);
-        this.rigidBodies_.push({mesh: box, rigidBody: rbBox});
         this.gameObjects.forEach((s)=>{
-          s.Shoot()
+          s.Shoot(this.physicsWorld_,this.rigidBodies_,this.camera_)
           console.log("shoot")
         });
         break;
@@ -163,11 +158,10 @@ class BasicWorldDemo {
       this.mixers.forEach((s)=>s.update(timeElapsed));
     }
 
-    this.gameObjects.forEach((gameObj)=>gameObj.update());
+    this.gameObjects.forEach((gameObj)=>gameObj.update(timeElapsed));
     this.ground.Update(timeElapsed);
     this._controls.update();
     this.water.Update(timeElapsed);
-    const timeElapsedS = timeElapsed * 0.001;
     this.physicsWorld_.stepSimulation(timeElapsed, 10);
 
     for (let i = 0; i < this.rigidBodies_.length; ++i) {
@@ -179,7 +173,7 @@ class BasicWorldDemo {
       const quat3 = new THREE.Quaternion(quat.x(), quat.y(), quat.z(), quat.w());
 
       this.rigidBodies_[i].mesh.position.copy(pos3);
-      console.log(this.rigidBodies_[i].mesh.position);
+      //console.log(this.rigidBodies_[i].mesh.position);
       this.rigidBodies_[i].mesh.quaternion.copy(quat3);
     }
     // if (this.player_.gameOver && !this.gameOver_) {
