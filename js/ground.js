@@ -1,4 +1,6 @@
-import {FBXLoader} from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/FBXLoader.js';
+import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.124/examples/jsm/loaders/GLTFLoader.js';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.124/build/three.module.js';
+import {rigidBody}from'./rigidBody.js';
 
 export const ground = (() => {
 
@@ -10,19 +12,15 @@ export const ground = (() => {
 
 
     load = () => {
-        const loader = new FBXLoader();
-        loader.load('Models/island.fbx', (fbx) => {
-        //fbx.position.y = -45;
-        fbx.position.x = 0;
-        fbx.position.z = 0;
-        fbx.castShadow = true;
-        fbx.receiveShadow = true;
-        fbx.rotation.z = 0;
-        fbx.rotation.y = 0;
-        this.mesh_ = fbx
-
-         fbx.scale.setScalar(0.1);
-        this.params_.scene.add(fbx)
+        const loader = new GLTFLoader();
+        this.gameObject = new THREE.Object3D();
+        loader.load('Models/island.gltf', (gltf) => {
+            this.gameObject=gltf;
+            this.gameObject.scene.traverse( c=>{
+                c.castShadow=true;
+            })
+            this.gameObject.scene.scale.set(5,5,5);
+            this.params_.scene.add(this.gameObject.scene);
 
     });
 

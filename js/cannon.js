@@ -14,10 +14,9 @@ export const cannon = (() => {
 
 
         load = () => {
-            this.rad=0;
             const loader = new GLTFLoader();
             this.gameObject = new THREE.Object3D();
-            loader.load('Models/Boom_1.gltf', (gltf) => {
+            loader.load('Models/cannonModel2/Boom.gltf', (gltf) => {
                // console.log(gltf);
                 this.gameObject=gltf;
                 this.gameObject.scene.traverse( c=>{
@@ -29,7 +28,6 @@ export const cannon = (() => {
                 this.idle=this.animationMixer.clipAction(this.gameObject.animations[0])
                 this.idle.setLoop( THREE.LoopOnce );
                 this.params_.scene.add(this.gameObject.scene);
-
             });
 
 
@@ -46,34 +44,40 @@ export const cannon = (() => {
             const box = new THREE.Mesh(
                 new THREE.SphereGeometry(4),
                 new THREE.MeshStandardMaterial({color: 0x800000}));
-            box.position.set(this.gameObject.position);
-            rbBox.createSphere(1, box.position, 4);
+            //let tmpPos=;
+            //tmpPos.x=(tmpPos.x+100);
+            let position = new THREE.Vector3();
+            position.getPositionFromMatrix( this.gameObject.scene.matrixWorld );
+            box.position.set(position.x,position.y+25,position.z);
+
+            rbBox.createSphere(0.1, box.position, 4);
             rbBox.setRestitution(0.5);
             rbBox.setFriction(1);
             rbBox.setRollingFriction(1);
             this.physicsWorld_.addRigidBody(rbBox.body_);
             this.params_.scene.add(box);
+            box.userData.physicsBody=rbBox.body_;
+            box.userData.tag="Bullet";
             rigid.push({mesh: box, rigidBody: rbBox});
-
+            //console.log(box.position);
             this.up = new THREE.Vector3();
-            const scale=1000;
+            const scale=100;
             camera.getWorldDirection(this.up)
             this.up.multiplyScalar(scale);
-            this.up.y=-(scale/2)-this.up.y;
+            //console.log( this.up);
+            //this.up.y=-(scale/2)-this.up.y;
+            this.up.y+=25;
+           // console.log( this.up);
             rbBox.setLineralVelocity(this.up);
             this.idle.stop();
             this.idle.play();
         }
 
+
         update(timeElapsed){
             var axis = new THREE.Vector3(0,1,0);
-            //this.rad += timeElapsed;
             this.gameObject.scene.setRotationFromMatrix(this.params_.camera.matrix)
             this.gameObject.scene.rotateY(Math.PI/2);
-
-            //this.gameObject.scene.rotateOnWorldAxis(new THREE.Vector3(0,1,0),0) ;
-
-            //this.gameObject.scene.rotate.y=0;
         }
 
 

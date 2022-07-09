@@ -21,7 +21,15 @@
   <component name="ChangeListManager">
     <list default="true" id="6e5e7ee5-284e-4bf6-8ab8-961dc86bd721" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/island.fbx" beforeDir="false" afterPath="$PROJECT_DIR$/Models/island.fbx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Boom_1.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Boom_1.gltf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Diff_Boom.png" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Diff_Boom.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/block.fbx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/cat/scene.bin" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/cat/scene.gltf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/cat/textures/Mat_Gradient_baseColor.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/js/block.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/block.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/cannon.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/cannon.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/ground.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ground.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
@@ -44,6 +52,9 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="2B4oY9dmPC7Q1fynxx5AGNxe5Aj" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
@@ -54,13 +65,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/Models" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Projects/ThreeJs/test&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Projects\ThreeJs\Armata\Cannon\Models" />
@@ -81,7 +93,10 @@
       <updated>1656174762993</updated>
       <workItem from="1656174764074" duration="1169000" />
       <workItem from="1656176321268" duration="48266000" />
-      <workItem from="1656443050792" duration="44802000" />
+      <workItem from="1656443050792" duration="45563000" />
+      <workItem from="1657118786413" duration="1335000" />
+      <workItem from="1657192791902" duration="19023000" />
+      <workItem from="1657293344439" duration="27471000" />
     </task>
     <servers />
   </component>
@@ -98,27 +113,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="395" y="87" key="#Inspections" timestamp="1656346604807">
-      <screen x="0" y="0" width="1536" height="816" />
-    </state>
-    <state x="395" y="87" key="#Inspections/0.0.1536.816/0.-1080.1920.1032@0.0.1536.816" timestamp="1656346604807" />
-    <state x="223" y="63" width="1089" height="713" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1656267357574">
-      <screen x="0" y="0" width="1536" height="816" />
-    </state>
-    <state x="223" y="63" width="1089" height="713" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.816/0.-1080.1920.1032@0.0.1536.816" timestamp="1656267357574" />
-    <state x="528" y="210" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1656540042766">
-      <screen x="0" y="0" width="1536" height="816" />
-    </state>
-    <state x="528" y="210" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1536.816/0.-1080.1920.1032@0.0.1536.816" timestamp="1656540042766" />
-    <state x="549" y="163" key="FileChooserDialogImpl" timestamp="1656441456199">
-      <screen x="0" y="0" width="1536" height="816" />
-    </state>
-    <state x="549" y="163" key="FileChooserDialogImpl/0.0.1536.816/0.-1080.1920.1032@0.0.1536.816" timestamp="1656441456199" />
-    <state x="425" y="185" key="run.anything.popup" timestamp="1656262190600">
-      <screen x="0" y="0" width="1536" height="816" />
-    </state>
-    <state x="425" y="185" key="run.anything.popup/0.0.1536.816/0.-1080.1920.1032@0.0.1536.816" timestamp="1656262190600" />
   </component>
 </project>

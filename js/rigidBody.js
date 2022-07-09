@@ -17,7 +17,7 @@ export const rigidBody = (() => {
         this.body_.setRollingFriction(val);
     }
     setLineralVelocity(vector){
-        console.log(vector);
+    //    console.log(vector);
         const tempVec=new Ammo.btVector3(parseInt(vector.x,10),parseInt(vector.y,10),parseInt(vector.z,10 ));
 
         //this.body_.setLinearVelocity( tempVec );

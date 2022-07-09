@@ -22,6 +22,7 @@ class BasicWorldDemo {
   _OnStart(msg) {
     document.getElementById('game-menu').style.display = 'none';
     document.getElementById('game-menu1').style.display = 'none';
+    this.OnWindowResize_();
     this._gameStarted = true;
   }
 
@@ -31,6 +32,12 @@ class BasicWorldDemo {
     });
     this.mixers=[];
     this.gameObjects=[];
+    this.bullets_ = [];
+    //num of objects in game
+    this.numOfColumns=3;
+    this.numOfRows=3;
+
+
     document.getElementById('container').appendChild(this.threejs_.domElement);
     this.scene_ = new THREE.Scene();
     this.initCamera();
@@ -49,7 +56,7 @@ class BasicWorldDemo {
   initGameObjects(){
     this.water=new waterPlane.WaterPlane({scene: this.scene_,physicsWorld:this.physicsWorld_});
     this.ground = new ground.Ground({scene: this.scene_});
-    // this.block = new block.Block({scene: this.scene_});
+    this.block = new block.Block({scene: this.scene_,columns:this.numOfColumns,rows:this.numOfRows,physicsWorld:this.physicsWorld_});
     this.scene_.background=new skybox.Skybox({scene: this.scene_}).GetTexture();
     this.gameObjects.push(new cannon.Cannon({scene: this.scene_,camera:this.camera_}));
   }
@@ -88,7 +95,6 @@ class BasicWorldDemo {
   initPhysics() {
 
     // Physics configuration
-    this.rigidBodies_ = [];
     this.collisionConfiguration_ = new Ammo.btDefaultCollisionConfiguration();
     this.dispatcher_ = new Ammo.btCollisionDispatcher(this.collisionConfiguration_);
     this.broadphase_ = new Ammo.btDbvtBroadphase();
@@ -96,8 +102,59 @@ class BasicWorldDemo {
     this.physicsWorld_ = new Ammo.btDiscreteDynamicsWorld(
         this.dispatcher_, this.broadphase_, this.solver_, this.collisionConfiguration_);
     this.physicsWorld_.setGravity(new Ammo.btVector3(0, -100, 0));
+   // this.setupContactResultCallback();
+    this.setupContactPairResultCallback();
+  }
+
+  setupContactPairResultCallback(){
+
+    this.cbContactPairResult = new Ammo.ConcreteContactResultCallback();
+
+    this.cbContactPairResult.hasContact = false;
+
+    this.cbContactPairResult.addSingleResult = function(cp, colObj0Wrap, partId0, index0, colObj1Wrap, partId1, index1){
+
+      let contactPoint = Ammo.wrapPointer( cp, Ammo.btManifoldPoint );
+
+      const distance = contactPoint.getDistance();
+
+      if( distance > 0 ) return;
+      this.hasContact = true;
+
+    }
 
   }
+  checkContact(){
+    if (this.bullets_.length>0) {
+      this.cbContactPairResult.hasContact = false;
+
+        this.physicsWorld_.contactPairTest(this.bullets_[0].mesh.userData.physicsBody,this.water.mesh_.userData.physicsBody, this.cbContactPairResult);
+        if( this.cbContactPairResult.hasContact ){
+          let selectedObject = this.scene_.getObjectById(this.bullets_[0].mesh.id);
+          this.scene_.remove(selectedObject);
+          this.bullets_.pop();
+
+        }
+
+      // console.log(temp);
+    }
+  }
+  updatePhysics(timeElapsed){
+    this.physicsWorld_.stepSimulation(timeElapsed, 10);
+
+    for (let i = 0; i < this.bullets_.length; ++i) {
+      this.bullets_[i].rigidBody.motionState_.getWorldTransform(this.tmpTransform_);
+      const pos = this.tmpTransform_.getOrigin();
+      const quat = this.tmpTransform_.getRotation();
+      const pos3 = new THREE.Vector3(pos.x(), pos.y(), pos.z());
+      const quat3 = new THREE.Quaternion(quat.x(), quat.y(), quat.z(), quat.w());
+
+      this.bullets_[i].mesh.position.copy(pos3);
+      this.bullets_[i].mesh.quaternion.copy(quat3);
+    }
+    this.checkContact();
+  }
+
   initControls(){
     this._controls = new OrbitControls(
         this.camera_, document.getElementById('container'));
@@ -118,8 +175,10 @@ class BasicWorldDemo {
     switch (event.code) {
       case "Space":
         this.gameObjects.forEach((s)=>{
-          s.Shoot(this.physicsWorld_,this.rigidBodies_,this.camera_)
-          console.log("shoot")
+          if (this.bullets_.length===0) {
+            s.Shoot(this.physicsWorld_, this.bullets_, this.camera_)
+            console.log("shoot")
+          }
         });
         break;
     }
@@ -157,30 +216,20 @@ class BasicWorldDemo {
     }else{
       this.mixers.forEach((s)=>s.update(timeElapsed));
     }
-
+    //TODO rebuild update system
     this.gameObjects.forEach((gameObj)=>gameObj.update(timeElapsed));
     this.ground.Update(timeElapsed);
     this._controls.update();
     this.water.Update(timeElapsed);
-    this.physicsWorld_.stepSimulation(timeElapsed, 10);
+    this.block.Update(timeElapsed)
+    this.updatePhysics(timeElapsed);
 
-    for (let i = 0; i < this.rigidBodies_.length; ++i) {
-      this.rigidBodies_[i].rigidBody.motionState_.getWorldTransform(this.tmpTransform_);
-      const pos = this.tmpTransform_.getOrigin();
-      const quat = this.tmpTransform_.getRotation();
-      const pos3 = new THREE.Vector3(pos.x(), pos.y(), pos.z());
-      //console.log(pos3);
-      const quat3 = new THREE.Quaternion(quat.x(), quat.y(), quat.z(), quat.w());
-
-      this.rigidBodies_[i].mesh.position.copy(pos3);
-      //console.log(this.rigidBodies_[i].mesh.position);
-      this.rigidBodies_[i].mesh.quaternion.copy(quat3);
-    }
     // if (this.player_.gameOver && !this.gameOver_) {
     //   this.gameOver_ = true;
     //   document.getElementById('game-over').classList.toggle('active');
     // }
   }
+
 }
 
 
