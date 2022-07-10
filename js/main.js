@@ -31,8 +31,12 @@ class BasicWorldDemo {
       antialias: true,
     });
     this.mixers=[];
+    this.score=0;
+    this.winScore=5;
+    this.loseScore=-2;
     this.gameObjects=[];
     this.bullets_ = [];
+    this.targets=[];
     //num of objects in game
     this.numOfColumns=3;
     this.numOfRows=3;
@@ -56,7 +60,7 @@ class BasicWorldDemo {
   initGameObjects(){
     this.water=new waterPlane.WaterPlane({scene: this.scene_,physicsWorld:this.physicsWorld_});
     this.ground = new ground.Ground({scene: this.scene_});
-    this.block = new block.Block({scene: this.scene_,columns:this.numOfColumns,rows:this.numOfRows,physicsWorld:this.physicsWorld_});
+    this.block = new block.Block({scene: this.scene_,columns:this.numOfColumns,targets:this.targets,rows:this.numOfRows,physicsWorld:this.physicsWorld_});
     this.scene_.background=new skybox.Skybox({scene: this.scene_}).GetTexture();
     this.gameObjects.push(new cannon.Cannon({scene: this.scene_,camera:this.camera_}));
   }
@@ -102,6 +106,7 @@ class BasicWorldDemo {
     this.physicsWorld_ = new Ammo.btDiscreteDynamicsWorld(
         this.dispatcher_, this.broadphase_, this.solver_, this.collisionConfiguration_);
     this.physicsWorld_.setGravity(new Ammo.btVector3(0, -100, 0));
+    //this.physicsWorld_.debug.enable(true)
    // this.setupContactResultCallback();
     this.setupContactPairResultCallback();
   }
@@ -128,15 +133,47 @@ class BasicWorldDemo {
     if (this.bullets_.length>0) {
       this.cbContactPairResult.hasContact = false;
 
-        this.physicsWorld_.contactPairTest(this.bullets_[0].mesh.userData.physicsBody,this.water.mesh_.userData.physicsBody, this.cbContactPairResult);
+      this.physicsWorld_.contactPairTest(this.bullets_[0].mesh.userData.physicsBody,this.water.mesh_.userData.physicsBody, this.cbContactPairResult);
+      if( this.cbContactPairResult.hasContact ){
+        this.removeObjectById(this.bullets_[0].mesh.id);
+        this.bullets_.pop();
+        this.decreaseScore();
+        return;
+      }
+      for (let i = 0; i < this.targets.length; ++i) {
+        this.physicsWorld_.contactPairTest(this.bullets_[0].mesh.userData.physicsBody,this.targets[i].userData.physicsBody, this.cbContactPairResult);
         if( this.cbContactPairResult.hasContact ){
-          let selectedObject = this.scene_.getObjectById(this.bullets_[0].mesh.id);
-          this.scene_.remove(selectedObject);
+          this.removeObjectById(this.bullets_[0].mesh.id);
           this.bullets_.pop();
-
+          this.removeObjectById(this.targets[i].scene.id)
+          this.targets.splice(i,1);
+          this.increaseScore();
+          return;
         }
-
+      }
       // console.log(temp);
+    }
+  }
+  removeObjectById(id){
+    let selectedObject = this.scene_.getObjectById(id);
+    this.scene_.remove(selectedObject);
+  }
+  increaseScore(){
+    this.score++;
+    document.getElementById('score-text').innerText = this.score.toLocaleString(
+        'en-US', {minimumIntegerDigits: 5, useGrouping: false});
+    if (this.score>this.winScore){
+      this.gameOver_ = true;
+      document.getElementById('game-win').classList.toggle('active');
+    }
+  }
+  decreaseScore(){
+    this.score--;
+    document.getElementById('score-text').innerText = this.score.toLocaleString(
+        'en-US', {minimumIntegerDigits: 5, useGrouping: false});
+    if (this.score<this.loseScore){
+      this.gameOver_ = true;
+      document.getElementById('game-over').classList.toggle('active');
     }
   }
   updatePhysics(timeElapsed){

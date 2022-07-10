@@ -39,23 +39,24 @@ export const block = (() => {
                     let clone= new THREE.Object3D();
                     // this.gameObject.scene.copy(clone);
                     clone.scene=this.gameObject.scene.clone();
-
-
                     clone.scene.position.set(stepX*(i+1),stepY*(j),-100+(stepZ*i))
+                   //clone.scene.children[0].position.set(stepX*(i+1),stepY*(j),-100+(stepZ*i))
                     clone.scale.set(5,5,5);
                     clone.scene.traverse( c=>{
                         c.castShadow=true;})
-
+                    //console.log(new THREE.Box3().setFromObject(clone));
                     this.RigidBody= new rigidBody.RigidBody();
-                    this.RigidBody.createBox(0, clone.position,clone.quaternion,
-                        new THREE.Box3().setFromObject(clone));
+                    // this.RigidBody.createBox(0, clone.scene.position,clone.quaternion,
+                    //     new THREE.Vector3(5,5,5));
+                    this.RigidBody.createByGeometry(0,clone.scene.children[0].geometry, clone.scene.position,5)
                     this.RigidBody.setRestitution(0.99);
                     clone.userData.physicsBody =  this.RigidBody.body_;
                     clone.userData.tag = "Box";
-                    console.log(this.RigidBody);
+                    //console.log(this.RigidBody);
                     this.params_.physicsWorld.addRigidBody(this.RigidBody.body_);
                     this.params_.scene.add(clone.scene);
                     this.boxs.push(clone);
+                    this.params_.targets.push(clone);
                    // console.log(stepX*(i+1),stepY*(j),-100+(stepZ*i));
                 }
             }

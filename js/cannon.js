@@ -47,8 +47,8 @@ export const cannon = (() => {
             //let tmpPos=;
             //tmpPos.x=(tmpPos.x+100);
             let position = new THREE.Vector3();
-            position.getPositionFromMatrix( this.gameObject.scene.matrixWorld );
-            box.position.set(position.x,position.y+25,position.z);
+            position.setFromMatrixPosition( this.gameObject.scene.matrixWorld );
+            box.position.set(position.x,position.y+15,position.z);
 
             rbBox.createSphere(0.1, box.position, 4);
             rbBox.setRestitution(0.5);
@@ -66,7 +66,7 @@ export const cannon = (() => {
             this.up.multiplyScalar(scale);
             //console.log( this.up);
             //this.up.y=-(scale/2)-this.up.y;
-            this.up.y+=25;
+            this.up.y+=15;
            // console.log( this.up);
             rbBox.setLineralVelocity(this.up);
             this.idle.stop();

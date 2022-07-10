@@ -21,20 +21,12 @@
   <component name="ChangeListManager">
     <list default="true" id="6e5e7ee5-284e-4bf6-8ab8-961dc86bd721" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Boom_1.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Boom_1.gltf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Diff_Boom.png" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Diff_Boom.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/block.fbx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/cat/scene.bin" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/cat/scene.gltf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/cat/textures/Mat_Gradient_baseColor.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/base.css" beforeDir="false" afterPath="$PROJECT_DIR$/base.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/block.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/block.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/cannon.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/cannon.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/ground.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/ground.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/js/rigidBody.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/rigidBody.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/js/waterSimulation.js" beforeDir="false" afterPath="$PROJECT_DIR$/js/waterSimulation.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,14 +57,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Projects/ThreeJs/test&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "D:/Projects/ThreeJs/car+sunrise",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="D:\Projects\ThreeJs\Armata\Cannon\Models" />
@@ -97,6 +89,8 @@
       <workItem from="1657118786413" duration="1335000" />
       <workItem from="1657192791902" duration="19023000" />
       <workItem from="1657293344439" duration="27471000" />
+      <workItem from="1657383295506" duration="2136000" />
+      <workItem from="1657445143098" duration="9983000" />
     </task>
     <servers />
   </component>
