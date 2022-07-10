@@ -34,12 +34,15 @@ export const block = (() => {
             let stepX=-25;
             let stepY=25;
             let stepZ=10;
+            let addX=-50;
+            let addY=-25;
+            let addZ=-30;
             for (var i = 0; i <this.params_.columns ; i++) {
                 for (var j = 0; j <this.params_.columns ; j++) {
                     let clone= new THREE.Object3D();
                     // this.gameObject.scene.copy(clone);
                     clone.scene=this.gameObject.scene.clone();
-                    clone.scene.position.set(stepX*(i+1),stepY*(j),-100+(stepZ*i))
+                    clone.scene.position.set(stepX*(i+1)+addX,stepY*(j)+addY,-100+(stepZ*i)+addZ+10*i)
                    //clone.scene.children[0].position.set(stepX*(i+1),stepY*(j),-100+(stepZ*i))
                     clone.scale.set(5,5,5);
                     clone.scene.traverse( c=>{

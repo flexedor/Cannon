@@ -30,13 +30,21 @@ class BasicWorldDemo {
     this.threejs_ = new THREE.WebGLRenderer({
       antialias: true,
     });
-    this.mixers=[];
+
+    this.cameraPos = new THREE.Vector3(120,50,120);
+
     this.score=0;
     this.winScore=5;
     this.loseScore=-2;
+
+
+    this.isReturnCameraOnPlace=false;
+    this.isInShoot=false;
+
     this.gameObjects=[];
     this.bullets_ = [];
     this.targets=[];
+    this.mixers=[];
     //num of objects in game
     this.numOfColumns=3;
     this.numOfRows=3;
@@ -93,7 +101,8 @@ class BasicWorldDemo {
     const near = 1.0;
     const far = 20000.0;
     this.camera_ = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    this.camera_.position.set(120, 50,120);
+    this.cameraPos = new THREE.Vector3(120,50,120);
+    this.camera_.position.set( this.cameraPos.x,this.cameraPos.y,this.cameraPos.z);
     this.camera_.lookAt(0, 0, 0);
   }
   initPhysics() {
@@ -106,13 +115,11 @@ class BasicWorldDemo {
     this.physicsWorld_ = new Ammo.btDiscreteDynamicsWorld(
         this.dispatcher_, this.broadphase_, this.solver_, this.collisionConfiguration_);
     this.physicsWorld_.setGravity(new Ammo.btVector3(0, -100, 0));
-    //this.physicsWorld_.debug.enable(true)
-   // this.setupContactResultCallback();
     this.setupContactPairResultCallback();
   }
 
   setupContactPairResultCallback(){
-
+    //configuration of collition detector
     this.cbContactPairResult = new Ammo.ConcreteContactResultCallback();
 
     this.cbContactPairResult.hasContact = false;
@@ -138,6 +145,7 @@ class BasicWorldDemo {
         this.removeObjectById(this.bullets_[0].mesh.id);
         this.bullets_.pop();
         this.decreaseScore();
+        this.isInShoot=false;
         return;
       }
       for (let i = 0; i < this.targets.length; ++i) {
@@ -148,6 +156,7 @@ class BasicWorldDemo {
           this.removeObjectById(this.targets[i].scene.id)
           this.targets.splice(i,1);
           this.increaseScore();
+          this.isInShoot=false;
           return;
         }
       }
@@ -213,7 +222,8 @@ class BasicWorldDemo {
       case "Space":
         this.gameObjects.forEach((s)=>{
           if (this.bullets_.length===0) {
-            s.Shoot(this.physicsWorld_, this.bullets_, this.camera_)
+            s.Shoot(this.physicsWorld_, this.bullets_, this.camera_);
+            this.isInShoot=true;
             console.log("shoot")
           }
         });
@@ -253,13 +263,31 @@ class BasicWorldDemo {
     }else{
       this.mixers.forEach((s)=>s.update(timeElapsed));
     }
-    //TODO rebuild update system
+    if (this.isInShoot){
+      let vec=this.bullets_[0].mesh.position;
+      console.log(vec);
+      this._controls.enabled=false;
+      this.camera_.lookAt(vec.x,vec.y,vec.z);
+      this._controls.target.set(vec.x,vec.y,vec.z);
+      this.camera_.position.set(vec.x+this.cameraPos.x,vec.y+this.cameraPos.y,vec.z+this.cameraPos.z);
+      this.isReturnCameraOnPlace=true;
+    }else{
+      this._controls.enabled=true;
+      if (this.isReturnCameraOnPlace){
+         this.camera_.position.set( this.cameraPos.x,this.cameraPos.y,this.cameraPos.z);
+        this.isReturnCameraOnPlace=false;
+      }
+      this._controls.target.set(0, 0, 0);
+      this.camera_.lookAt(0, 0, 0);
+    }
     this.gameObjects.forEach((gameObj)=>gameObj.update(timeElapsed));
     this.ground.Update(timeElapsed);
     this._controls.update();
     this.water.Update(timeElapsed);
     this.block.Update(timeElapsed)
     this.updatePhysics(timeElapsed);
+
+
 
     // if (this.player_.gameOver && !this.gameOver_) {
     //   this.gameOver_ = true;
